@@ -172,7 +172,7 @@ final class Monobank
         $this->validateRequestData($apiUri, $requestData);
         $responseRaw = $this->getResponseFromAPI($apiUri, $requestData);
         $response['success'] = isset($responseRaw['status']) && $responseRaw['status'] === 'OK';
-        if ($response['success'] === true) $response['error'] = $responseRaw['message'];
+        if ($response['success'] !== true) $response['error'] = $responseRaw['message'];
 
         return $response;
     }
@@ -222,7 +222,7 @@ final class Monobank
             case 'api/client/validate':
                 if (isset($requestParams['phone']) === false || strlen($requestParams['phone']) !== 13) {
                     throw new \InvalidArgumentException(
-                        'Invalid data passed to request. Phone must have 12 digits with plus and look like +380931231212'
+                        "Invalid data passed to request. Phone must have 12 digits with '+' and look like +380931231212"
                     );
                 }
                 break;
@@ -309,6 +309,6 @@ final class Monobank
         $server_output = curl_exec($ch);
         $this->serverResponseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-        return json_decode($server_output, true);
+        return  $this->serverResponseCode === 504 ? [] : json_decode($server_output, true);
     }
 }
