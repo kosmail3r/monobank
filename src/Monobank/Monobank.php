@@ -54,7 +54,7 @@ final class Monobank
      */
     public function validateClientByPhone(string $phone) : array
     {
-        $apiUri = 'api/client/validate';
+        $apiUri = '/api/v2/client/validate';
         $requestParameter = ['phone' => $phone];
         $this->validateRequestData($apiUri, $requestParameter);
         $responseRaw = $this->execApiRequest($apiUri, $requestParameter);
@@ -62,7 +62,6 @@ final class Monobank
         $response['success'] = isset($responseRaw['found']);
         if ($response['success'] === true) {
             $response['clientExist'] = $responseRaw['found'];
-            $response['clientData'] = $responseRaw['client'];
         } else {
             $response['error'] = 'System error';
         }
