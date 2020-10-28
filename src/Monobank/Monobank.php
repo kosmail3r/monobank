@@ -54,7 +54,7 @@ final class Monobank
      */
     public function validateClientByPhone(string $phone) : array
     {
-        $apiUri = '/api/v2/client/validate';
+        $apiUri = 'api/v2/client/validate';
         $requestParameter = ['phone' => $phone];
         $this->validateRequestData($apiUri, $requestParameter);
         $responseRaw = $this->execApiRequest($apiUri, $requestParameter);
@@ -219,6 +219,7 @@ final class Monobank
     {
         switch ($apiUri) {
             case 'api/client/validate':
+            case 'api/v2/client/validate':
                 if (isset($requestParams['phone']) === false || strlen($requestParams['phone']) !== 13) {
                     throw new \InvalidArgumentException(
                         "Invalid data passed to request. Phone must have 12 digits with '+' and look like +380931231212"
