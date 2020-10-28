@@ -285,6 +285,7 @@ final class Monobank
     private function execApiRequest(string $apiUri, array $requestData, $method = 'POST') : array
     {
         $url = $this->baseApiUrl . $apiUri;
+        $result = [];
         $requestString = json_encode($requestData);
         $signature = base64_encode(hash_hmac('sha256', $requestString, $this->apiKey, true));
         $headers = [
@@ -308,6 +309,9 @@ final class Monobank
         $server_output = curl_exec($ch);
         $this->serverResponseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-        return  $this->serverResponseCode === 504 ? [] : json_decode($server_output, true);
+        if ($this->serverResponseCode !== 504) {
+            $result = json_decode($server_output, true) ?? [];
+        }
+        return $result;
     }
 }
